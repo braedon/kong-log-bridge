@@ -1,0 +1,16 @@
+# bottle==0.13
+# The way Bottle currently handles errors doesn't allow logging
+# middleware to log them correctly, so used a patched version.
+# NOTE: This won't override a previously installed version of Bottle,
+#       so remove first with:
+#       > pip3 uninstall bottle
+git+git://github.com/braedon/bottle@improve-wsgi-error-handling-013#egg=bottle
+click==7.1.2
+elasticsearch==7.8.0
+gevent==20.6.0
+jog==0.1.1
+# Require simplejson to ensure it's available for Bottle to use. If it's not
+# available Bottle will try and use the builtin json module, causing ambiguity
+# as to which module's JSONDecodeError exceptions need to be caught.
+simplejson==3.17.2
+tonyg-rfc3339==0.1
