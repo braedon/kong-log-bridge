@@ -121,11 +121,17 @@ def hash_authorization(value):
     if isinstance(value, list):
         return [hash_authorization(authorization) for authorization in value]
 
+    if ' ' not in value:
+        return hash_value(value)
+
     auth_type, credentials = value.split(' ', 1)
     return f'{auth_type} {hash_value(credentials)}'
 
 
 def _hash_cookie(value):
+    if '=' not in value:
+        return hash_value(value)
+
     cookie_name, cookie_value = value.split('=', 1)
     return f'{cookie_name}={hash_value(cookie_value)}'
 

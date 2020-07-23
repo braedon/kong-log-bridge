@@ -223,6 +223,62 @@ class Test(unittest.TestCase):
                                do_hash_cookie=True)
         self.assertEqual(expected, result)
 
+    def test_transform_bad_auth(self):
+        test_log = {
+            "request": {
+                "headers": {
+                    "authorization": "some_token",
+                },
+            },
+        }
+        expected = {
+            "request": {
+                "headers": {
+                    "authorization": "0Mmt7PwMgQ9Z7oYvP4ypoQ",
+                },
+            },
+        }
+
+        result = transform_log(test_log,
+                               do_hash_auth=True)
+        self.assertEqual(expected, result)
+
+    def test_transform_bad_cookie(self):
+        test_log = {
+            "request": {
+                "headers": {
+                    "cookie": "__Host-example_login_csrf-zK9kT-some_login_csrf",
+                },
+            },
+            "response": {
+                "headers": {
+                    "set-cookie": [
+                        "__Host-example_auth/some_auth; HttpOnly; Max-Age=86400; Path=/; SameSite=lax; Secure",
+                        "__Host-example_csrf|some_csrf; HttpOnly; Max-Age=86400; Path=/; SameSite=strict; Secure"
+                    ],
+                },
+            },
+        }
+        expected = {
+            "request": {
+                "headers": {
+                    "cookie": "BPvPOrxZNo_DhGCLTtcO_A",
+                },
+            },
+            "response": {
+                "headers": {
+                    "set-cookie": [
+                        "ceNEbDKXcwmC6WjnoB3xNw; HttpOnly; Max-Age=86400; Path=/; SameSite=lax; Secure",
+                        "AwdYctEnVuXiVepXBiXu-w; HttpOnly; Max-Age=86400; Path=/; SameSite=strict; Secure"
+                    ],
+                },
+            },
+        }
+
+        result = transform_log(test_log,
+                               do_hash_cookie=True)
+        self.assertEqual(expected, result)
+
     def test_hash_paths(self):
         test_log = {
             'foo': [
