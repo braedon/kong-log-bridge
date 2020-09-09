@@ -120,9 +120,6 @@ def main(**options):
     app = construct_app(es_client, **options)
     app = wsgi_log_middleware(app)
 
-    print(options['hash_path'])
-    print(options['null_path'])
-
     with graceful_cleanup(graceful_shutdown):
         bottle.run(app,
                    host='0.0.0.0', port=options['port'],
