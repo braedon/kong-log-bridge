@@ -35,59 +35,40 @@ def log_exceptions(exit_on_exception=False):
     return decorator
 
 
-def nice_shutdown(shutdown_signals=(signal.SIGINT, signal.SIGTERM)):
+@contextmanager
+def nice_shutdown(shutdown=sys.exit, shutdown_signals=(signal.SIGINT, signal.SIGTERM)):
     """
-    Logs shutdown signals nicely.
+    Logs shutdown signals nicely, and calls a shutdown function.
 
-    Installs handlers for the shutdown signals (SIGINT and SIGTERM by default)
-    that log the signal that has been received, and then raise SystemExit.
+    Installs new handlers for the shutdown signals (SIGINT and SIGTERM by default).
     The original handlers are restored before returning.
     """
 
+    shutting_down = False
+
     def sig_handler(signum, _):
-        log.info('Received signal %(signal)s.',
+        nonlocal shutting_down
+
+        if shutting_down:
+            log.warning('Received signal %(signal)s while shutting down. Aborting.',
+                        {'signal': signal.Signals(signum).name})
+            sys.exit()
+
+        shutting_down = True
+
+        log.info('Received signal %(signal)s. Shutting down.',
                  {'signal': signal.Signals(signum).name})
-        # Raise SystemExit to bypass (most) try/except blocks.
-        sys.exit()
+        shutdown()
 
-    def decorator(func):
-
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            # Setup new shutdown handlers, storing the old ones for later.
-            old_handlers = {}
-            for sig in shutdown_signals:
-                old_handlers[sig] = signal.signal(sig, sig_handler)
-
-            try:
-                return func(*args, **kwargs)
-
-            finally:
-                # Restore the old handlers
-                for sig, old_handler in old_handlers.items():
-                    signal.signal(sig, old_handler)
-
-        return wrapper
-
-    return decorator
-
-
-@contextmanager
-def graceful_cleanup(func, *args, **kwargs):
-    """
-    Context manager to help gracefully clean up after a code block.
-
-    The graceful cleanup function is run if the code block has exited without
-    an error. This could be it returning normally, or raising SystemExit with
-    a falsy (non-error) code.
-    """
+    # Setup new shutdown handlers, storing the old ones for later.
+    old_handlers = {}
+    for sig in shutdown_signals:
+        old_handlers[sig] = signal.signal(sig, sig_handler)
 
     try:
         yield  # Wrapped code block run here
-    except SystemExit as e:
-        # A truthy exit code indicates an error, so we should reraise.
-        if e.code:
-            raise
 
-    log.debug('Non-error exit. Running graceful cleanup function.')
-    func(*args, **kwargs)
+    finally:
+        # Restore the old handlers
+        for sig, old_handler in old_handlers.items():
+            signal.signal(sig, old_handler)
