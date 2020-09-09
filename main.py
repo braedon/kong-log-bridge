@@ -3,6 +3,7 @@ from gevent import monkey; monkey.patch_all()
 import bottle
 import click
 import gevent
+import kong_log_bridge
 import logging
 import sys
 import time
@@ -83,6 +84,8 @@ gevent_pool = Pool()
 def main(**options):
 
     def shutdown():
+        kong_log_bridge.SERVER_READY = False
+
         def wait():
             # Sleep for a few seconds to allow for race conditions between sending
             # the SIGTERM and load balancers stopping sending traffic here.

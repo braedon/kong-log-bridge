@@ -5,6 +5,8 @@ from bottle import Bottle, abort, request, response
 
 from .transform import transform_log
 
+SERVER_READY = True
+
 
 def json_default_error_handler(http_error):
     response.content_type = 'application/json'
@@ -15,9 +17,17 @@ def construct_app(es_client, es_index, **kwargs):
     app = Bottle()
     app.default_error_handler = json_default_error_handler
 
-    @app.get('/status')
-    def status():
-        return 'OK'
+    @app.get('/-/live')
+    def live():
+        return 'Live'
+
+    @app.get('/-/ready')
+    def ready():
+        if SERVER_READY:
+            return 'Ready'
+        else:
+            response.status = 503
+            return 'Unavailable'
 
     @app.post('/logs')
     def logs():
