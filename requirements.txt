@@ -6,8 +6,8 @@
 #       > pip3 uninstall bottle
 git+git://github.com/braedon/bottle@improve-wsgi-error-handling-013#egg=bottle
 click==7.1.2
-elasticsearch==7.8.0
-gevent==20.6.0
+elasticsearch==7.9.1
+gevent==20.6.2
 jog==0.1.1
 # Require simplejson to ensure it's available for Bottle to use. If it's not
 # available Bottle will try and use the builtin json module, causing ambiguity
