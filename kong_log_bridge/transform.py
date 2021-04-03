@@ -172,14 +172,27 @@ def transform_log(log,
                   do_hash_auth=False,
                   do_hash_cookie=False,
                   hash_paths=None,
-                  null_paths=None):
+                  null_paths=None,
+                  expose_ips=None):
+
+    if expose_ips is None:
+        expose_ips = []
 
     if convert_ts:
         for path in CONVERT_TS_PATHS:
             log = update_path(log, path, convert_ts)
 
     if do_hash_ip:
+        # Extract client IP in case we need to expose it later.
+        client_ip = log.get('client_ip')
+
         log = update_path(log, 'client_ip', hash_value)
+
+        if client_ip:
+            # Check if IP hash is in the exposure list.
+            client_ip_hash = log.get('client_ip')
+            if client_ip_hash in expose_ips:
+                log['raw_client_ip'] = client_ip
 
     if do_hash_auth:
         log = update_path(log, 'request.headers.authorization', hash_authorization)

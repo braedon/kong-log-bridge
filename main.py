@@ -42,6 +42,9 @@ gevent_pool = Pool()
 @click.option('--null-path', multiple=True,
               help='A path to a field to set to null. '
                    'Specify multiple paths by providing the option multiple times.')
+@click.option('--expose-ip', multiple=True,
+              help='Hash of an IP to expose i.e. include the raw IP in logs. '
+                   'Specify multiple IP hashes by providing the option multiple times.')
 @click.option('--es-node', '-e', required=True, multiple=True,
               help='Address of a node in a Elasticsearch cluster to send logs to. '
                    'Specify multiple nodes by providing the option multiple times. '

@@ -50,6 +50,8 @@ Fields converted:
 ### Client IP Hashing `--hash-ip`
 This option enables hashing the `client_ip` field to avoid storing sensitive user IP addresses.
 
+Specific raw IP addresses can be exposed with the `--expose-ip` option. This option adds a `raw_client_ip` field to logs for requests from the specified IP address hash. This option should only be used where accessing the raw IP is strictly necessary, e.g. to investigate an IP that's sending malicious requests.
+
 ### Authorization Hashing `--hash-auth`
 This option enables hashing the `credentials` part of the [`Authorization` request header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization) (`request.headers.authorization` field) to avoid storing credentials/tokens.
 
