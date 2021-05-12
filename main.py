@@ -109,6 +109,10 @@ def main(**options):
     configure_logging(json=options['json'], verbose=options['verbose'],
                       log_level=options['log_level'])
 
+    # Elasticsearch logs all requests at (at least) INFO level. Disable if log level isn't DEBUG.
+    if not (options['log_level'] == 'DEBUG' or options['verbose']):
+        logging.getLogger('elasticsearch').setLevel(logging.WARNING)
+
     if options['es_basic_user'] and not options['es_basic_password']:
         click.BadOptionUsage('es_basic_user', 'Username provided with no password.')
     elif not options['es_basic_user'] and options['es_basic_password']:
