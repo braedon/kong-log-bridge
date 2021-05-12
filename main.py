@@ -69,6 +69,8 @@ gevent_pool = Pool()
 @click.option('--es-basic-password',
               help='Password for basic authentication with Elasticsearch nodes. '
                    'Must be specified if "--es-basic-user" is provided.')
+@click.option('--es-max-connections', default=10,
+              help='Maximum simultaneous connections to Elasticsearch. (default=10)')
 @click.option('--port', '-p', default=8080,
               help='Port to serve API on (default=8080)')
 @click.option('--shutdown-sleep', default=10,
@@ -137,11 +139,13 @@ def main(**options):
                                   ca_certs=options['es_ca_certs'],
                                   client_cert=options['es_client_cert'],
                                   client_key=options['es_client_key'],
-                                  http_auth=http_auth)
+                                  http_auth=http_auth,
+                                  maxsize=options['es_max_connections'])
     else:
         es_client = Elasticsearch(options['es_node'],
                                   verify_certs=False,
-                                  http_auth=http_auth)
+                                  http_auth=http_auth,
+                                  maxsize=options['es_max_connections'])
 
     app = construct_app(es_client, **options)
     app = wsgi_log_middleware(app)
