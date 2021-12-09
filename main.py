@@ -30,6 +30,8 @@ gevent_pool = Pool()
 @click.command(context_settings=CONTEXT_SETTINGS)
 @click.option('--convert-ts', default=False, is_flag=True,
               help='Convert UNIX timestamps to RFC3339 datetime strings.')
+@click.option('--convert-qs-bools', default=False, is_flag=True,
+              help='Convert `True` boolean values in request querystrings to empty strings.')
 @click.option('--hash-ip', default=False, is_flag=True,
               help='Hash the client ip address.')
 @click.option('--hash-auth', default=False, is_flag=True,

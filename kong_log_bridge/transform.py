@@ -85,6 +85,22 @@ def convert_ts(ts):
     return rfc3339.timestamptostr(ts)
 
 
+def convert_qs_bool(qs_dict):
+    """
+    Convert any boolean `True` values in a querystring dictionary to empty strings
+
+    Other values are unchanged.
+    """
+
+    qs_dict = qs_dict.copy()
+
+    for param in qs_dict.keys():
+        if qs_dict[param] is True:
+            qs_dict[param] = ''
+
+    return qs_dict
+
+
 def hash_value(value, digest_size=HASH_BYTES):
     """
     Hash a string with blake2b, and encode as a URL safe base64 string
@@ -168,6 +184,7 @@ def hash_set_cookie(value):
 
 def transform_log(log,
                   do_convert_ts=False,
+                  do_convert_qs_bools=False,
                   do_hash_ip=False,
                   do_hash_auth=False,
                   do_hash_cookie=False,
@@ -181,6 +198,9 @@ def transform_log(log,
     if convert_ts:
         for path in CONVERT_TS_PATHS:
             log = update_path(log, path, convert_ts)
+
+    if do_convert_qs_bools:
+        log = update_path(log, 'request.querystring', convert_qs_bool)
 
     if do_hash_ip:
         # Extract client IP in case we need to expose it later.

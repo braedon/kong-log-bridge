@@ -18,6 +18,7 @@ The docker image exposes a REST API on port `8080`. It is configured by passing 
     braedon/kong-log-bridge:<version> \
         -e <elasticsearch node> \
         --convert-ts \
+        --convert-qs-bools \
         --hash-ip \
         --hash-auth \
         --hash-cookie
@@ -46,6 +47,9 @@ Fields converted:
  - started_at
  - tries[].balancer_start
 ```
+
+### Querystring Bool Conversion `--convert-qs-bools`
+When a URL includes a query string parameter without a `=` or value, Kong uses the boolean `true` as the value. This can cause Elasticsearch mapping conflicts if is parameter is sometimes provided with a string value. This option enables converting any boolean `true` value to an empty string.
 
 ### Client IP Hashing `--hash-ip`
 This option enables hashing the `client_ip` field to avoid storing sensitive user IP addresses.

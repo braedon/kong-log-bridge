@@ -28,7 +28,10 @@ class Test(unittest.TestCase):
                 "retries": 5
             },
             "request": {
-                "querystring": {},
+                "querystring": {
+                    "foo": "bar",
+                    "baz": True
+                },
                 "size": "1430",
                 "uri": "/login",
                 "url": "https://example.com:8443/login",
@@ -132,7 +135,10 @@ class Test(unittest.TestCase):
                 "retries": 5
             },
             "request": {
-                "querystring": {},
+                "querystring": {
+                    "foo": "bar",
+                    "baz": ""
+                },
                 "size": "1430",
                 "uri": "/login",
                 "url": "https://example.com:8443/login",
@@ -218,6 +224,7 @@ class Test(unittest.TestCase):
 
         result = transform_log(test_log,
                                do_convert_ts=True,
+                               do_convert_qs_bools=True,
                                do_hash_ip=True,
                                do_hash_auth=True,
                                do_hash_cookie=True)

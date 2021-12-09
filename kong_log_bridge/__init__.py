@@ -44,6 +44,7 @@ def construct_app(es_client, es_index, **kwargs):
 
         log = transform_log(log,
                             do_convert_ts=kwargs['convert_ts'],
+                            do_convert_qs_bools=kwargs['convert_qs_bools'],
                             do_hash_ip=kwargs['hash_ip'],
                             do_hash_auth=kwargs['hash_auth'],
                             do_hash_cookie=kwargs['hash_cookie'],
