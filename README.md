@@ -92,7 +92,7 @@ This is currently the only supported output method, but more may be added in the
 ### Elasticsearch Nodes `-e`/`--es-node` (required)
 The address of at least one Elasticsearch node must be provided via this option. The port should be included if non-standard (`9200`). Provide the option multiple times to specify multiple nodes in a cluster.
 
-### Elasticsearch Index `-es-index`
+### Elasticsearch Index `--es-index`
 The Elasticsearch index to send logs to. [Elasticsearch index date math](https://www.elastic.co/guide/en/elasticsearch/reference/current/date-math-index-names.html) can be used. Defaults to `<kong-requests-{now/d}>`.
 
 ### Elasticsearch Security
