@@ -50,6 +50,8 @@ def construct_app(es_client, es_index, **kwargs):
                             do_hash_cookie=kwargs['hash_cookie'],
                             hash_paths=kwargs['hash_path'],
                             null_paths=kwargs['null_path'],
+                            limit_request_headers=kwargs['limit_request_headers'],
+                            limit_request_querystring=kwargs['limit_request_querystring'],
                             expose_ips=kwargs['expose_ip'])
 
         es_client.index(index=es_index, body=log, request_timeout=30)

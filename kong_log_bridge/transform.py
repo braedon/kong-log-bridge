@@ -182,6 +182,24 @@ def hash_set_cookie(value):
         return _hash_cookie(value)
 
 
+def limit_dict(limit):
+    """Limit the number of entries in a dictionary"""
+
+    def do_limit_dict(value):
+
+        if value is None:
+            return None
+
+        dict_keys = list(value.keys())
+        if len(dict_keys) <= limit:
+            return value
+
+        limited_dict_keys = dict_keys[:limit]
+        return {k: v for k, v in value.items() if k in limited_dict_keys}
+
+    return do_limit_dict
+
+
 def transform_log(log,
                   do_convert_ts=False,
                   do_convert_qs_bools=False,
@@ -190,6 +208,8 @@ def transform_log(log,
                   do_hash_cookie=False,
                   hash_paths=None,
                   null_paths=None,
+                  limit_request_headers=None,
+                  limit_request_querystring=None,
                   expose_ips=None):
 
     if expose_ips is None:
@@ -228,5 +248,11 @@ def transform_log(log,
     if null_paths:
         for path in null_paths:
             log = update_path(log, path, None)
+
+    if limit_request_headers is not None:
+        log = update_path(log, 'request.headers', limit_dict(limit_request_headers))
+
+    if limit_request_querystring is not None:
+        log = update_path(log, 'request.querystring', limit_dict(limit_request_querystring))
 
     return log

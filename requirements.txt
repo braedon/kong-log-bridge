@@ -4,7 +4,7 @@
 # NOTE: This won't override a previously installed version of Bottle,
 #       so remove first with:
 #       > pip3 uninstall bottle
-git+git://github.com/braedon/bottle@improve-wsgi-error-handling-013#egg=bottle
+git+https://github.com/braedon/bottle@improve-wsgi-error-handling-013#egg=bottle
 click==7.1.2
 elasticsearch==7.12.0
 gevent==21.1.2

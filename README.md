@@ -33,7 +33,7 @@ Kong JSON request logs can be `POST`ed to the `/logs` endpoint. This is designed
 This is currently the only supported input method, but more may be added in the future.
 
 ## Transformation
-Request logs are passed through unchanged by default, but you probably want to enable at least one transformation.
+Request logs are passed through largely unchanged by default, but you probably want to enable at least one transformation.
 
 ### Timestamp Conversion `--convert-ts`
 Kong request logs include a number of UNIX timestamps (some in milliseconds rather than seconds). These are not human readable, and require explicit mappings to be used in Elasticsearch. Enabling this option will convert these timestamps to [RFC3339 date-time strings](https://www.ietf.org/rfc/rfc3339.txt) for readability and automatic Elasticsearch mapping.
@@ -83,6 +83,11 @@ Paths don't need to end at specific value - they can specify an entire object or
 e.g. `--null-path request.headers` will convert the entire `request.headers` object to null, effectively removing it from the log.
 
 If a path doesn't match any field in a given request log it will be ignored.
+
+### Object Limits `--limit-request-headers`/`--limit-request-querystring`
+Requests can contain arbitrary numbers of headers and query string parameters. This can create large numbers of fields in the destination Elasticsearch index, potentially causing performance and indexing issues.
+
+To mitigate this issue, the number of keys in the `request.headers` and `request.querystring` fields are limited to 100 by default - subsequent keys are dropped. The limits can be changed by the `--limit-request-headers` and `--limit-request-querystring` options.
 
 ## Output
 Transformed logs are indexed in Elasticsearch.

@@ -44,6 +44,10 @@ gevent_pool = Pool()
 @click.option('--null-path', multiple=True,
               help='A path to a field to set to null. '
                    'Specify multiple paths by providing the option multiple times.')
+@click.option('--limit-request-headers', default=100,
+              help='Limit the number of request headers (default=100)')
+@click.option('--limit-request-querystring', default=100,
+              help='Limit the number of request querystring parameters (default=100)')
 @click.option('--expose-ip', multiple=True,
               help='Hash of an IP to expose i.e. include the raw IP in logs. '
                    'Specify multiple IP hashes by providing the option multiple times.')
