@@ -7,7 +7,7 @@
 git+https://github.com/braedon/bottle@improve-wsgi-error-handling-013#egg=bottle
 click==7.1.2
 elasticsearch==7.12.0
-gevent==21.1.2
+gevent==23.9.1
 jog==0.1.1
 # Require simplejson to ensure it's available for Bottle to use. If it's not
 # available Bottle will try and use the builtin json module, causing ambiguity
